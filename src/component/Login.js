@@ -1,11 +1,24 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import Header from './Header'
+import { checkValidate } from '../utils/validateData';
 
 const Login = () => {
   const [isSignIn , setIsSignIn] = useState(true);
+  const email = useRef();
+  const password = useRef();
+  const name = useRef();
+  const [errorMessage , setErrorMessage] = useState(null);
 
   const handleSignInForm = ()=>{
     setIsSignIn(!isSignIn);
+  }
+
+  const handleSign = (e)=>{
+    e.preventDefault();
+    const message = checkValidate(email.current.value, password.current.value);
+    setErrorMessage(message);
+    console.log(errorMessage);
+    console.log(email.current.value);
   }
 
   return (
@@ -24,29 +37,34 @@ const Login = () => {
         >
           {isSignIn? "Sign In" : "Sign Up"}
         </h2>
-        <form>
+        <form >
           { !isSignIn && <input type='text' 
               className=' mx-4 my-2 p-2 w-2/3 bg-black bg-opacity-40 border rounded-md border-slate-700'
               placeholder='Full Name'
+              ref={name}
           />
           }
           <input type='text' 
             className=' mx-4 my-2 p-2 w-2/3 bg-black bg-opacity-40 border rounded-md border-slate-700'
             placeholder='Email or Mobile'
+            ref={email}
            />
           <input type='password' 
             className=' mx-4 my-2 p-2 w-2/3 bg-black bg-opacity-40 border rounded-md border-slate-700'
             placeholder='password'
+            ref={password}
           />
+          <p className='text-red-500 font-bold text-lg py-2'>{errorMessage}</p>
           <button
             className='m-4 p-2 bg-red-600 w-2/3 rounded-lg text-lg font-bold'
+            onClick={handleSign}
           >
             {isSignIn? "Sign In" : "Sign Up"}
           </button>
 
           <p 
             className='py-4 cursor-pointer'
-            onClick={handleSignInForm}
+            onClick={ handleSignInForm}
           >
            {isSignIn ? " New to Netflix? Sign up now" : "Already exist? Sign In"}
           </p>
